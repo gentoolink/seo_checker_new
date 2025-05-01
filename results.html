@@ -134,8 +134,16 @@
         
         <div id="gmb-claim-section" class="report-section">
             <h2>🔑 Claim Your Google Business Profile</h2>
-            <p>Taking control of your business listing is the first step to better local visibility! Claiming your profile lets you manage your information, respond to reviews, and show up in local searches.</p>
-            <p>Ready to get started? <a href="https://www.google.com/business" target="_blank">Claim your profile here</a>.</p>
+            <p>Taking control of your business listing is the first step to better local visibility! Here's what you need to do:</p>
+            <ol class="tip-list">
+                <li>Go to <a href="https://www.google.com/business" target="_blank">Google Business Profile</a></li>
+                <li>Click "Manage now"</li>
+                <li>Enter your business name: <strong>${businessName}</strong></li>
+                <li>Enter your business address: <strong>${businessAddress || 'Your business address'}</strong></li>
+                ${businessWebsite ? `<li>Add your website: <strong>${businessWebsite}</strong></li>` : ''}
+                <li>Follow the verification steps</li>
+            </ol>
+            <p>Once verified, you'll be able to manage your information, respond to reviews, and show up in local searches!</p>
         </div>
 
         <div class="report-section">
@@ -197,8 +205,10 @@
         const businessName = urlParams.get('business-name');
         const businessCategory = urlParams.get('business-category');
         const city = urlParams.get('city');
-        const isGmbClaimed = urlParams.get('gmb-claimed') === 'true';
+        const gbpStatus = urlParams.get('gbp');
         const reviewCount = parseInt(urlParams.get('review-count') || '0');
+        const businessAddress = urlParams.get('business_address');
+        const businessWebsite = urlParams.get('business_website');
 
         // Update business info
         document.getElementById('business-name').textContent = businessName;
@@ -206,7 +216,7 @@
 
         // Calculate SEO Score
         let seoScore = 'B';
-        if (!isGmbClaimed) {
+        if (gbpStatus === 'no') {
             seoScore = 'F';
         } else if (reviewCount === 0) {
             seoScore = 'C';
@@ -223,13 +233,27 @@
 
         // Handle GMB claim section
         const gmbClaimSection = document.getElementById('gmb-claim-section');
-        if (isGmbClaimed) {
-            gmbClaimSection.classList.add('hidden');
+        if (gbpStatus === 'yes') {
+            gmbClaimSection.style.display = 'none';
+        } else {
+            gmbClaimSection.innerHTML = `
+                <h2>🔑 Claim Your Google Business Profile</h2>
+                <p>Taking control of your business listing is the first step to better local visibility! Here's what you need to do:</p>
+                <ol class="tip-list">
+                    <li>Go to <a href="https://www.google.com/business" target="_blank">Google Business Profile</a></li>
+                    <li>Click "Manage now"</li>
+                    <li>Enter your business name: <strong>${businessName}</strong></li>
+                    <li>Enter your business address: <strong>${businessAddress || 'Your business address'}</strong></li>
+                    ${businessWebsite ? `<li>Add your website: <strong>${businessWebsite}</strong></li>` : ''}
+                    <li>Follow the verification steps</li>
+                </ol>
+                <p>Once verified, you'll be able to manage your information, respond to reviews, and show up in local searches!</p>
+            `;
         }
 
         // Update review content
         const reviewContent = document.getElementById('review-content');
-        if (!isGmbClaimed) {
+        if (gbpStatus === 'no') {
             reviewContent.innerHTML = `
                 <p>First, let's get your Google Business Profile claimed! Once you've done that, we can help you build your reviews.</p>
                 <p>Ready to get started? <a href="https://www.google.com/business" target="_blank">Claim your profile here</a>.</p>
@@ -248,39 +272,24 @@
             `;
         } else if (reviewCount < 5) {
             reviewContent.innerHTML = `
-                <p>You're off to a great start with ${reviewCount} reviews! Let's build momentum:</p>
+                <p>You're on your way with ${reviewCount} reviews! Here's how to get more:</p>
                 <ul class="tip-list">
-                    <li><span class="highlight">Set a Goal:</span> Aim for 5 reviews this month</li>
-                    <li><span class="highlight">Ask for Details:</span> "We'd love to hear what you enjoyed most about your experience"</li>
-                    <li><span class="highlight">Make it Visual:</span> Encourage customers to add photos to their reviews</li>
-                    <li><span class="highlight">Respond to All:</span> Thank each reviewer personally</li>
-                    <li><span class="highlight">Share Success:</span> Post about your reviews on social media</li>
+                    <li><span class="highlight">Ask After Success:</span> Request reviews right after positive customer interactions</li>
+                    <li><span class="highlight">Make it Easy:</span> Create a short Google review link and text it to them</li>
+                    <li><span class="highlight">Personal Touch:</span> Send individual messages like "Hi [Name], thanks for choosing us! Would you mind sharing your experience on Google?"</li>
+                    <li><span class="highlight">Follow Up:</span> If they don't review right away, send a friendly reminder after 2-3 days</li>
                 </ul>
-                <p>Pro Tip: Reviews with photos and detailed feedback rank better in local search!</p>
-            `;
-        } else if (reviewCount < 10) {
-            reviewContent.innerHTML = `
-                <p>Excellent work with ${reviewCount} reviews! Let's take it to the next level:</p>
-                <ul class="tip-list">
-                    <li><span class="highlight">Quality Over Quantity:</span> Focus on getting detailed, photo-rich reviews</li>
-                    <li><span class="highlight">Regular Schedule:</span> Set a goal of 2-3 new reviews per month</li>
-                    <li><span class="highlight">Highlight Specifics:</span> Ask customers to mention particular services they used</li>
-                    <li><span class="highlight">Show Appreciation:</span> Thank reviewers and share their feedback</li>
-                    <li><span class="highlight">Monitor Trends:</span> Keep an eye on your average rating</li>
-                </ul>
-                <p>Pro Tip: Businesses with 10+ reviews are 3x more likely to appear in local search results!</p>
+                <p>Remember: Your first 5 reviews are crucial for building trust with potential customers!</p>
             `;
         } else {
             reviewContent.innerHTML = `
-                <p>Outstanding! You have ${reviewCount} reviews - that's impressive! Here's how to maintain momentum:</p>
+                <p>Great job with ${reviewCount} reviews! Keep the momentum going:</p>
                 <ul class="tip-list">
-                    <li><span class="highlight">Maintain Quality:</span> Keep encouraging detailed, photo-rich reviews</li>
-                    <li><span class="highlight">Regular Updates:</span> Aim for 1-2 new reviews weekly</li>
-                    <li><span class="highlight">Engage with All:</span> Respond to every review within 24 hours</li>
-                    <li><span class="highlight">Showcase Success:</span> Feature your best reviews on your website</li>
-                    <li><span class="highlight">Monitor Performance:</span> Track your review growth and rating trends</li>
+                    <li><span class="highlight">Stay Consistent:</span> Ask for reviews after every successful customer interaction</li>
+                    <li><span class="highlight">Respond to All:</span> Thank customers for positive reviews and address any concerns in negative ones</li>
+                    <li><span class="highlight">Share Success:</span> Feature positive reviews on your website and social media</li>
+                    <li><span class="highlight">Monitor Growth:</span> Track your review count and average rating monthly</li>
                 </ul>
-                <p>Pro Tip: Businesses that actively manage their reviews see 20% more local search visibility!</p>
             `;
         }
 

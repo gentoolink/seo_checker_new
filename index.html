@@ -92,6 +92,27 @@
             margin-top: 5px;
         }
     </style>
+    <script>
+        // Function to handle Google Business Profile section visibility
+        function toggleGoogleBusinessSection() {
+            const gbpSelect = document.getElementById('gbp');
+            const gbpSection = document.getElementById('gbp-section');
+            
+            if (gbpSelect.value === 'no') {
+                gbpSection.style.display = 'block';
+            } else {
+                gbpSection.style.display = 'none';
+            }
+        }
+
+        // Add event listener when the page loads
+        window.onload = function() {
+            const gbpSelect = document.getElementById('gbp');
+            gbpSelect.addEventListener('change', toggleGoogleBusinessSection);
+            // Initial check
+            toggleGoogleBusinessSection();
+        };
+    </script>
 </head>
 <body>
     <div class="container">
@@ -154,18 +175,24 @@
             </div>
 
             <div class="form-group">
-                <label>Have you claimed your Google Business Profile?</label>
-                <div class="radio-group">
-                    <label class="radio-option">
-                        <input type="radio" name="gmb-claimed" value="true" required>
-                        Yes, I've claimed it
-                    </label>
-                    <label class="radio-option">
-                        <input type="radio" name="gmb-claimed" value="false">
-                        No, not yet
-                    </label>
+                <label for="gbp">Have you claimed your Google Business Profile?</label>
+                <select id="gbp" name="gbp" required>
+                    <option value="">Select an option</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No, not yet</option>
+                </select>
+            </div>
+
+            <div id="gbp-section" style="display: none;">
+                <div class="form-group">
+                    <label for="business_address">Business Address</label>
+                    <input type="text" id="business_address" name="business_address" placeholder="Enter your business street address">
                 </div>
-                <p class="help-text">This helps us provide the most relevant advice for your business.</p>
+                <div class="form-group">
+                    <label for="business_website">Business Website (if any)</label>
+                    <input type="url" id="business_website" name="business_website" placeholder="https://www.yourbusiness.com">
+                </div>
+                <p class="help-text">We'll help you claim your Google Business Profile with this information.</p>
             </div>
 
             <div class="form-group">
