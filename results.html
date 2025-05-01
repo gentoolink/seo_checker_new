@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Local SEO Checker | Instantly Grade Your Google Business Profile</title>
     <meta name="description" content="See your Local SEO score and get personalized steps to improve your Google ranking. Our free checker reveals exactly what's holding your business back from local search success.">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DTCV7454RF"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-DTCV7454RF');
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -231,25 +240,58 @@
 
         // Update review content
         const reviewContent = document.getElementById('review-content');
-        if (reviewCount === 0) {
+        if (!isGmbClaimed) {
             reviewContent.innerHTML = `
-                <p>Let's get your first reviews! Here's how:</p>
+                <p>First, let's get your Google Business Profile claimed! Once you've done that, we can help you build your reviews.</p>
+                <p>Ready to get started? <a href="https://www.google.com/business" target="_blank">Claim your profile here</a>.</p>
+            `;
+        } else if (reviewCount === 0) {
+            reviewContent.innerHTML = `
+                <p>Great job claiming your profile! Now let's get your first reviews:</p>
                 <ul class="tip-list">
-                    <li>Ask your happiest customers first - they're most likely to leave positive reviews</li>
-                    <li>Send a text message right after a successful service or sale</li>
-                    <li>Make it easy with a short Google review link</li>
-                    <li>Follow up with a friendly reminder if they don't review right away</li>
+                    <li><span class="highlight">Start with Your Best Customers:</span> Reach out to your most satisfied customers first</li>
+                    <li><span class="highlight">Perfect Timing:</span> Ask right after a successful service or sale</li>
+                    <li><span class="highlight">Make it Easy:</span> Create a short Google review link and text it to them</li>
+                    <li><span class="highlight">Personal Touch:</span> Send individual messages like "Hi [Name], thanks for choosing us! Would you mind sharing your experience on Google?"</li>
+                    <li><span class="highlight">Follow Up:</span> If they don't review right away, send a friendly reminder after 2-3 days</li>
                 </ul>
+                <p>Remember: Your first 5 reviews are crucial for building trust with potential customers!</p>
+            `;
+        } else if (reviewCount < 5) {
+            reviewContent.innerHTML = `
+                <p>You're off to a great start with ${reviewCount} reviews! Let's build momentum:</p>
+                <ul class="tip-list">
+                    <li><span class="highlight">Set a Goal:</span> Aim for 5 reviews this month</li>
+                    <li><span class="highlight">Ask for Details:</span> "We'd love to hear what you enjoyed most about your experience"</li>
+                    <li><span class="highlight">Make it Visual:</span> Encourage customers to add photos to their reviews</li>
+                    <li><span class="highlight">Respond to All:</span> Thank each reviewer personally</li>
+                    <li><span class="highlight">Share Success:</span> Post about your reviews on social media</li>
+                </ul>
+                <p>Pro Tip: Reviews with photos and detailed feedback rank better in local search!</p>
+            `;
+        } else if (reviewCount < 10) {
+            reviewContent.innerHTML = `
+                <p>Excellent work with ${reviewCount} reviews! Let's take it to the next level:</p>
+                <ul class="tip-list">
+                    <li><span class="highlight">Quality Over Quantity:</span> Focus on getting detailed, photo-rich reviews</li>
+                    <li><span class="highlight">Regular Schedule:</span> Set a goal of 2-3 new reviews per month</li>
+                    <li><span class="highlight">Highlight Specifics:</span> Ask customers to mention particular services they used</li>
+                    <li><span class="highlight">Show Appreciation:</span> Thank reviewers and share their feedback</li>
+                    <li><span class="highlight">Monitor Trends:</span> Keep an eye on your average rating</li>
+                </ul>
+                <p>Pro Tip: Businesses with 10+ reviews are 3x more likely to appear in local search results!</p>
             `;
         } else {
             reviewContent.innerHTML = `
-                <p>Great job with ${reviewCount} reviews! Here's how to get more quality reviews:</p>
+                <p>Outstanding! You have ${reviewCount} reviews - that's impressive! Here's how to maintain momentum:</p>
                 <ul class="tip-list">
-                    <li>Ask for reviews at the perfect moment - right after a successful service</li>
-                    <li>Encourage customers to mention specific services in their reviews</li>
-                    <li>Include photos with your review requests</li>
-                    <li>Thank reviewers publicly and personally</li>
+                    <li><span class="highlight">Maintain Quality:</span> Keep encouraging detailed, photo-rich reviews</li>
+                    <li><span class="highlight">Regular Updates:</span> Aim for 1-2 new reviews weekly</li>
+                    <li><span class="highlight">Engage with All:</span> Respond to every review within 24 hours</li>
+                    <li><span class="highlight">Showcase Success:</span> Feature your best reviews on your website</li>
+                    <li><span class="highlight">Monitor Performance:</span> Track your review growth and rating trends</li>
                 </ul>
+                <p>Pro Tip: Businesses that actively manage their reviews see 20% more local search visibility!</p>
             `;
         }
 
