@@ -119,11 +119,66 @@
             color: #666;
             margin-bottom: 30px;
         }
+        /* Print button styles */
+        .print-button {
+            display: block;
+            background-color: #2E8B57;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 20px auto;
+            max-width: 200px;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+        .print-button:hover {
+            background-color: #246B47;
+        }
+        /* Print styles */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+            .print-button, .contact-button {
+                display: none;
+            }
+            .report-section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                margin: 15px 0;
+                padding: 15px;
+                border: 1px solid #ddd;
+            }
+            .score {
+                border: 2px solid #2E8B57;
+                margin: 20px 0;
+            }
+            a {
+                text-decoration: none;
+                color: #2E8B57;
+            }
+            .footer {
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #ddd;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Your Local SEO Health Report</h1>
+        
+        <button onclick="window.print()" class="print-button">Print This Report</button>
         
         <div class="business-info">
             <h2 id="business-name"></h2>
