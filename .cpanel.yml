@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/fastlocalseochec/repo
+    - /bin/rsync -avz --delete --exclude '.git/' ./ $DEPLOYPATH/
