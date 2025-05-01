@@ -25,16 +25,6 @@
             text-align: center;
             margin-bottom: 30px;
         }
-        .score {
-            text-align: center;
-            font-size: 32px;
-            font-weight: bold;
-            color: #2E8B57;
-            margin: 30px 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-        }
         .report-section {
             background-color: #f9f9f9;
             padding: 20px;
@@ -46,9 +36,50 @@
             margin-top: 0;
             font-size: 20px;
         }
-        .report-section p {
-            margin: 10px 0;
-            color: #333;
+        .score {
+            text-align: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: #2E8B57;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+        .score.f {
+            color: #d63031;
+        }
+        .score.d {
+            color: #e17055;
+        }
+        .score.c {
+            color: #fdcb6e;
+        }
+        .score.b {
+            color: #00b894;
+        }
+        .score.a {
+            color: #2E8B57;
+        }
+        .highlight {
+            color: #2E8B57;
+            font-weight: bold;
+        }
+        .tip-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .tip-list li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+        }
+        .tip-list li:before {
+            content: "•";
+            color: #2E8B57;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
         }
         .contact-button {
             display: block;
@@ -80,53 +111,10 @@
             color: #666;
             border-radius: 5px;
         }
-        .highlight {
-            color: #2E8B57;
-            font-weight: bold;
-        }
-        .negative-review-tips {
-            background-color: #fff3f3;
-            border-left: 4px solid #ff6b6b;
-            padding: 15px;
-            margin: 10px 0;
-        }
-        .negative-review-tips h3 {
-            color: #d63031;
-            margin-top: 0;
-        }
-        .hidden {
-            display: none;
-        }
-        .claim-gmb {
-            background-color: #e3f2fd;
-            border-left: 4px solid #2196f3;
-            padding: 15px;
-            margin: 10px 0;
-        }
-        .claim-gmb h3 {
-            color: #1976d2;
-            margin-top: 0;
-        }
-        .step-number {
-            background-color: #2196f3;
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
-        .review-quality-tips {
-            background-color: #e8f5e9;
-            border-left: 4px solid #4caf50;
-            padding: 15px;
-            margin: 10px 0;
-        }
-        .review-quality-tips h3 {
-            color: #2e7d32;
-            margin-top: 0;
+        .business-info {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
         }
     </style>
 </head>
@@ -134,124 +122,64 @@
     <div class="container">
         <h1>Your Local SEO Health Report</h1>
         
+        <div class="business-info">
+            <h2 id="business-name"></h2>
+            <p id="business-location"></p>
+        </div>
+        
         <div class="ad-space">Advertisement Space</div>
         
-        <div class="score">Your SEO Grade: B</div>
+        <div id="seo-score" class="score">B</div>
         
         <div id="gmb-claim-section" class="report-section">
             <h2>🔑 Claim Your Google Business Profile</h2>
-            <p>Taking control of your business listing is the first step to better local visibility!</p>
-            
-            <div class="claim-gmb">
-                <h3>Quick Claim Guide</h3>
-                <ol>
-                    <li><span class="step-number">1</span> Go to <a href="https://business.google.com" target="_blank">business.google.com</a></li>
-                    <li><span class="step-number">2</span> Search for your business name</li>
-                    <li><span class="step-number">3</span> Click "Claim this business"</li>
-                    <li><span class="step-number">4</span> Verify your business (usually by phone or mail)</li>
-                    <li><span class="step-number">5</span> Complete your profile with photos and details</li>
-                </ol>
-                <p><strong>Pro Tip:</strong> Have your business documents ready (license, utility bill, etc.) to speed up verification.</p>
-            </div>
+            <p>Taking control of your business listing is the first step to better local visibility! Claiming your profile lets you manage your information, respond to reviews, and show up in local searches.</p>
+            <p>Ready to get started? <a href="https://www.google.com/business" target="_blank">Claim your profile here</a>.</p>
         </div>
-        
+
         <div class="report-section">
-            <h2>📊 Review Summary</h2>
-            <p id="review-summary-text">Your business is doing well with reviews, but there's room for growth! Aim to collect <span class="highlight">50+ reviews</span> with an average rating of 4.5+ stars. This will help you stand out in local search results and build trust with potential customers.</p>
-        </div>
-
-        <div id="review-starter-tips" class="report-section">
-            <h2>🌟 Getting Your First Reviews</h2>
-            <p>Starting your review collection journey? Here's how to make it easy:</p>
-            <ul>
-                <li><span class="highlight">Perfect Timing:</span> Ask for reviews right after a successful service or sale, when customer satisfaction is highest</li>
-                <li><span class="highlight">Make it Simple:</span> Create a short Google review link (goo.gl/yourbusiness) and text it to happy customers</li>
-                <li><span class="highlight">Personal Touch:</span> Instead of mass emails, send individual text messages like "Hi [Name], thanks for choosing us! Would you mind sharing your experience on Google?"</li>
-                <li><span class="highlight">In-Person Ask:</span> For face-to-face customers, show them how to leave a review on your phone - many will do it right then</li>
-                <li><span class="highlight">Follow Up:</span> If they don't review right away, send a friendly reminder after 2-3 days</li>
-            </ul>
-            <p>Remember: Focus on your happiest customers first. They're most likely to leave positive reviews!</p>
-        </div>
-
-        <div id="review-quality-tips" class="report-section">
-            <h2>📈 Boost Your Review Quality</h2>
-            <p>You're getting reviews - let's make them even better!</p>
-            
-            <div class="review-quality-tips">
-                <h3>Pro Tips for Better Reviews</h3>
-                <ul>
-                    <li><span class="highlight">Ask for Details:</span> "We'd love to hear what you enjoyed most about your experience with us"</li>
-                    <li><span class="highlight">Highlight Specifics:</span> "Feel free to mention our [specific service/product] in your review"</li>
-                    <li><span class="highlight">Timing Matters:</span> Send review requests during business hours when customers are most likely to respond</li>
-                    <li><span class="highlight">Make it Easy:</span> Include a direct link to your Google review page in your follow-up messages</li>
-                    <li><span class="highlight">Show Appreciation:</span> Thank reviewers publicly and personally for their feedback</li>
-                </ul>
+            <h2>📝 Reviews</h2>
+            <div id="review-content">
+                <!-- Dynamic content will be inserted here -->
             </div>
         </div>
 
         <div class="report-section">
-            <h2>💬 Handling Negative Reviews</h2>
-            <p>Negative reviews happen to every business. Here's how to handle them professionally:</p>
-            
-            <div class="negative-review-tips">
-                <h3>Quick Response Strategy</h3>
-                <ul>
-                    <li><span class="highlight">Respond Quickly:</span> Aim to reply within 24 hours</li>
-                    <li><span class="highlight">Stay Professional:</span> Keep emotions in check and maintain a helpful tone</li>
-                    <li><span class="highlight">Acknowledge & Apologize:</span> "I'm sorry to hear about your experience..."</li>
-                    <li><span class="highlight">Take it Offline:</span> "I'd love to discuss this further. Could you call us at..."</li>
-                    <li><span class="highlight">Show Action:</span> "We've already implemented new procedures to prevent this..."</li>
-                </ul>
-            </div>
-
-            <div class="negative-review-tips">
-                <h3>Response Templates</h3>
-                <p><strong>For Service Issues:</strong><br>
-                "Thank you for your feedback. We're sorry your experience didn't meet our standards. We've addressed this with our team and would appreciate the chance to make it right. Please contact us directly at [phone]."</p>
-                
-                <p><strong>For Communication Problems:</strong><br>
-                "We apologize for the miscommunication. Your feedback helps us improve our customer service. We'd love to hear more about your experience and make things right. Please reach out to [name] at [contact]."</p>
-            </div>
-        </div>
-
-        <div class="report-section">
-            <h2>📝 Google Business Profile Tips</h2>
-            <p>Keep your profile fresh and engaging by posting <span class="highlight">weekly updates</span>. Share:</p>
-            <ul>
-                <li>Special offers and promotions</li>
-                <li>Behind-the-scenes content</li>
-                <li>Customer success stories</li>
-                <li>Local community involvement</li>
+            <h2>📸 Photos</h2>
+            <p>Add these photos to your Google Business Profile to boost credibility and search ranking:</p>
+            <ul class="tip-list">
+                <li><span class="highlight">Exterior Shots:</span> Clear photos of your business front, including your sign and parking</li>
+                <li><span class="highlight">Team Photos:</span> Your staff in action, showing your expertise and professionalism</li>
+                <li><span class="highlight">Before/After:</span> Showcase your best work and transformations</li>
+                <li><span class="highlight">Service/Product Photos:</span> High-quality images of what you offer</li>
+                <li><span class="highlight">Customer Experience:</span> Photos of happy customers (with permission)</li>
             </ul>
         </div>
 
         <div class="report-section">
-            <h2>📸 Photo Suggestions</h2>
-            <p>Your profile needs more visual content! Add at least <span class="highlight">15-20 photos</span> including:</p>
-            <ul>
-                <li>Exterior and interior shots of your business</li>
-                <li>Your team in action</li>
-                <li>Your best products or services</li>
-                <li>Happy customers (with permission)</li>
-                <li>Your location's unique features</li>
+            <h2>📅 GMB Posts</h2>
+            <p>Keep your profile fresh and engaging with regular posts:</p>
+            <ul class="tip-list">
+                <li>Post <span class="highlight">weekly</span> to stay visible in local searches</li>
+                <li>Share special offers, events, and updates</li>
+                <li>Include photos with every post</li>
+                <li>Use local keywords in your post text</li>
+                <li>Add a clear call-to-action to each post</li>
             </ul>
         </div>
 
         <div class="report-section">
-            <h2>🔍 Keyword Optimization</h2>
-            <p>Your business description could be more compelling. Include:</p>
-            <ul>
-                <li>Your main services/products</li>
-                <li>What makes you unique</li>
-                <li>Your service area</li>
-                <li>Years in business</li>
-                <li>Any special certifications or awards</li>
-            </ul>
+            <h2>🔑 Keyword Tip</h2>
+            <p id="keyword-tip">
+                <!-- Dynamic content will be inserted here -->
+            </p>
         </div>
 
         <div class="report-section">
-            <h2>💪 Next Steps</h2>
-            <p>You're on the right track! Focus on getting more reviews and keeping your profile updated. Remember, local SEO is a marathon, not a sprint. Small, consistent improvements will help you climb the search rankings.</p>
+            <h2>✅ Keep Going</h2>
+            <p id="encouragement">
+                <!-- Dynamic content will be inserted here -->
+            </p>
         </div>
         
         <a href="mailto:ken@gentoolinkwebservices.com" class="contact-button">Get Personalized Help</a>
@@ -261,38 +189,89 @@
         <div class="footer">
             Powered by Gentoolink Web Services.
         </div>
-        
-        <script>
-            // Get URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const reviewCount = parseInt(urlParams.get('review-count') || '0');
-            const isGmbClaimed = urlParams.get('gmb-claimed') === 'true';
-            
-            // Handle GMB claim section
-            const gmbClaimSection = document.getElementById('gmb-claim-section');
-            if (isGmbClaimed) {
-                gmbClaimSection.classList.add('hidden');
-            }
-            
-            // Handle review sections
-            const reviewStarterTips = document.getElementById('review-starter-tips');
-            const reviewQualityTips = document.getElementById('review-quality-tips');
-            const reviewSummary = document.getElementById('review-summary-text');
-            
-            if (reviewCount === 0) {
-                reviewStarterTips.classList.remove('hidden');
-                reviewQualityTips.classList.add('hidden');
-                reviewSummary.innerHTML = 'You haven\'t received any reviews yet. Getting your first reviews is crucial for building trust with potential customers. Let\'s get you started!';
-            } else if (reviewCount < 5) {
-                reviewStarterTips.classList.remove('hidden');
-                reviewQualityTips.classList.add('hidden');
-                reviewSummary.innerHTML = `You're off to a good start with ${reviewCount} reviews! Let's build on this momentum to reach 50+ reviews.`;
-            } else {
-                reviewStarterTips.classList.add('hidden');
-                reviewQualityTips.classList.remove('hidden');
-                reviewSummary.innerHTML = `Great job with ${reviewCount} reviews! Let's focus on maintaining quality and consistency in your reviews.`;
-            }
-        </script>
     </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const businessName = urlParams.get('business-name');
+        const businessCategory = urlParams.get('business-category');
+        const city = urlParams.get('city');
+        const isGmbClaimed = urlParams.get('gmb-claimed') === 'true';
+        const reviewCount = parseInt(urlParams.get('review-count') || '0');
+
+        // Update business info
+        document.getElementById('business-name').textContent = businessName;
+        document.getElementById('business-location').textContent = `${city}`;
+
+        // Calculate SEO Score
+        let seoScore = 'B';
+        if (!isGmbClaimed) {
+            seoScore = 'F';
+        } else if (reviewCount === 0) {
+            seoScore = 'C';
+        } else if (reviewCount < 5) {
+            seoScore = 'C';
+        } else if (reviewCount < 10) {
+            seoScore = 'B';
+        } else {
+            seoScore = 'A';
+        }
+        const scoreElement = document.getElementById('seo-score');
+        scoreElement.textContent = seoScore;
+        scoreElement.classList.add(seoScore.toLowerCase());
+
+        // Handle GMB claim section
+        const gmbClaimSection = document.getElementById('gmb-claim-section');
+        if (isGmbClaimed) {
+            gmbClaimSection.classList.add('hidden');
+        }
+
+        // Update review content
+        const reviewContent = document.getElementById('review-content');
+        if (reviewCount === 0) {
+            reviewContent.innerHTML = `
+                <p>Let's get your first reviews! Here's how:</p>
+                <ul class="tip-list">
+                    <li>Ask your happiest customers first - they're most likely to leave positive reviews</li>
+                    <li>Send a text message right after a successful service or sale</li>
+                    <li>Make it easy with a short Google review link</li>
+                    <li>Follow up with a friendly reminder if they don't review right away</li>
+                </ul>
+            `;
+        } else {
+            reviewContent.innerHTML = `
+                <p>Great job with ${reviewCount} reviews! Here's how to get more quality reviews:</p>
+                <ul class="tip-list">
+                    <li>Ask for reviews at the perfect moment - right after a successful service</li>
+                    <li>Encourage customers to mention specific services in their reviews</li>
+                    <li>Include photos with your review requests</li>
+                    <li>Thank reviewers publicly and personally</li>
+                </ul>
+            `;
+        }
+
+        // Update keyword tip
+        const keywordTip = document.getElementById('keyword-tip');
+        keywordTip.innerHTML = `
+            <p>Optimize your business description with:</p>
+            <ul class="tip-list">
+                <li>Your main services (e.g., "${businessCategory} services in ${city}")</li>
+                <li>Your service area (e.g., "Serving ${city} and surrounding areas")</li>
+                <li>What makes you unique (e.g., "Family-owned since...", "24/7 emergency service")</li>
+                <li>Any special certifications or awards</li>
+            </ul>
+        `;
+
+        // Update encouragement
+        const encouragement = document.getElementById('encouragement');
+        if (reviewCount === 0) {
+            encouragement.textContent = "Getting your first reviews is a big step! Start with your most satisfied customers and build from there.";
+        } else if (reviewCount < 5) {
+            encouragement.textContent = "You're building momentum! Keep asking for reviews and watch your local visibility grow.";
+        } else {
+            encouragement.textContent = "You're doing great! Keep up the good work with regular updates and customer engagement.";
+        }
+    </script>
 </body>
 </html> 
