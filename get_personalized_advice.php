@@ -142,13 +142,6 @@ if ($httpCode === 200) {
 
 // Helper function to get city size (placeholder)
 function getCitySize($city) {
-    // This should be replaced with actual city population data
-    // You could use a database or API like:
-    // - Census data
-    // - City population API
-    // - Local business directory API
-    
-    // For now, return a placeholder
     return "medium-sized";
 }
 ?> 
