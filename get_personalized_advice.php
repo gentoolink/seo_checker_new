@@ -11,10 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Get POST data
-$data = json_decode(file_get_contents('php://input'), true);
+$rawData = file_get_contents('php://input');
+error_log("Raw input data: " . $rawData);
 
-// Log incoming data for debugging
-error_log("Incoming data: " . print_r($data, true));
+$data = json_decode($rawData, true);
+error_log("Decoded data: " . print_r($data, true));
 
 // Validate required fields
 $requiredFields = ['city', 'businessCategory', 'gbpStatus', 'reviewCount'];
@@ -46,6 +47,10 @@ $citySize = getCitySize($city);
 
 // Prepare data for Make.com webhook
 $webhookData = [
+    'content' => "Generate personalized local SEO advice for a {$businessCategory} business in {$city} (population: {$citySize}). " .
+                "The business has " . ($gbpStatus === 'yes' ? 'claimed' : 'not claimed') . " their Google Business Profile " .
+                "and has {$reviewCount} reviews. " .
+                "Provide specific, actionable advice that considers the local market size and competition.",
     'businessInfo' => [
         'city' => $city,
         'businessCategory' => $businessCategory,
@@ -53,16 +58,12 @@ $webhookData = [
         'reviewCount' => $reviewCount,
         'citySize' => $citySize
     ],
-    'prompt' => "Generate personalized local SEO advice for a {$businessCategory} business in {$city} (population: {$citySize}). " .
-               "The business has " . ($gbpStatus === 'yes' ? 'claimed' : 'not claimed') . " their Google Business Profile " .
-               "and has {$reviewCount} reviews. " .
-               "Provide specific, actionable advice that considers the local market size and competition.",
     'timestamp' => date('c'),
     'requestId' => uniqid('req_', true)
 ];
 
 // Log webhook data for debugging
-error_log("Sending to Make.com: " . print_r($webhookData, true));
+error_log("Sending to Make.com: " . json_encode($webhookData));
 
 // Send data to Make.com webhook
 $ch = curl_init('https://hook.us1.make.com/3lwen6w2qhm4d302ww6dln4308qh26uf');
@@ -70,14 +71,25 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($webhookData));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Content-Type: application/json'
+    'Content-Type: application/json',
+    'Accept: application/json'
 ]);
 curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+// Create a temporary file handle for CURL debug output
+$verbose = fopen('php://temp', 'w+');
+curl_setopt($ch, CURLOPT_STDERR, $verbose);
 
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $curlError = curl_error($ch);
+
+// Get CURL debug information
+rewind($verbose);
+$verboseLog = stream_get_contents($verbose);
+error_log("CURL Verbose Log: " . $verboseLog);
 
 // Log response for debugging
 error_log("Make.com Response Code: " . $httpCode);
@@ -87,6 +99,7 @@ if ($curlError) {
 }
 
 curl_close($ch);
+fclose($verbose);
 
 if ($httpCode === 200) {
     // Try to decode the response
