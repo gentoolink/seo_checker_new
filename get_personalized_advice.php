@@ -13,6 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Get POST data
 $data = json_decode(file_get_contents('php://input'), true);
 
+// Log incoming data for debugging
+error_log("Incoming data: " . print_r($data, true));
+
 // Validate required fields
 $requiredFields = ['city', 'businessCategory', 'gbpStatus', 'reviewCount'];
 $missingFields = [];
@@ -58,6 +61,9 @@ $webhookData = [
     'requestId' => uniqid('req_', true)
 ];
 
+// Log webhook data for debugging
+error_log("Sending to Make.com: " . print_r($webhookData, true));
+
 // Send data to Make.com webhook
 $ch = curl_init('https://hook.us1.make.com/3lwen6w2qhm4d302ww6dln4308qh26uf');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -66,20 +72,21 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($webhookData));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json'
 ]);
-curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Set timeout to 30 seconds
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true); // Verify SSL certificate
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $curlError = curl_error($ch);
-curl_close($ch);
 
-// Log the response for debugging
-error_log("Make.com Webhook Response - HTTP Code: " . $httpCode);
-error_log("Make.com Webhook Response - Body: " . $response);
+// Log response for debugging
+error_log("Make.com Response Code: " . $httpCode);
+error_log("Make.com Response: " . $response);
 if ($curlError) {
-    error_log("Make.com Webhook Error: " . $curlError);
+    error_log("Make.com Curl Error: " . $curlError);
 }
+
+curl_close($ch);
 
 if ($httpCode === 200) {
     // Try to decode the response
@@ -96,7 +103,6 @@ if ($httpCode === 200) {
             ]
         ]);
     } else {
-        // If response is not valid JSON or missing reply field
         error_log("Invalid response format from Make.com: " . $response);
         http_response_code(500);
         echo json_encode([
