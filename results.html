@@ -376,8 +376,21 @@
 
         // Fetch personalized advice
         async function getPersonalizedAdvice() {
-            const adviceDiv = document.getElementById('ai-advice');
+            const adviceSection = document.getElementById('ai-advice');
+            const adviceContent = adviceSection.querySelector('.loading');
+            const loadingMessage = adviceSection.querySelector('.loading');
             
+            // Get values from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const city = urlParams.get('city') || '';
+            const businessCategory = urlParams.get('business-category') || '';
+            const gbpStatus = urlParams.get('gbp') || 'no';
+            const reviewCount = urlParams.get('review-count') || '0';
+
+            // Show loading state
+            loadingMessage.style.display = 'block';
+            adviceContent.style.display = 'none';
+
             try {
                 const response = await fetch('get_personalized_advice.php', {
                     method: 'POST',
@@ -395,24 +408,16 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    adviceDiv.innerHTML = `
-                        <div class="ai-advice-content">
-                            ${data.advice.split('\n').map(paragraph => 
-                                `<p>${paragraph}</p>`
-                            ).join('')}
-                        </div>
-                    `;
+                    // Update the advice content
+                    adviceContent.innerHTML = data.data.advice;
+                    loadingMessage.style.display = 'none';
+                    adviceContent.style.display = 'block';
                 } else {
-                    adviceDiv.innerHTML = `
-                        <p class="error">Sorry, we couldn't generate personalized advice at this time. 
-                        Please try again later or contact us for assistance.</p>
-                    `;
+                    throw new Error(data.error || 'Failed to get personalized advice');
                 }
             } catch (error) {
-                adviceDiv.innerHTML = `
-                    <p class="error">Sorry, we couldn't generate personalized advice at this time. 
-                    Please try again later or contact us for assistance.</p>
-                `;
+                console.error('Error:', error);
+                loadingMessage.textContent = 'Sorry, we couldn\'t generate personalized advice at this time. Please try again later or contact us for assistance.';
             }
         }
 
