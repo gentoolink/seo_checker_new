@@ -41,25 +41,52 @@ $reviewCount = (int)$data['reviewCount'];
 // Get city population data
 $citySize = getCitySize($city);
 
-// Return formatted data for Make.com's OpenAI module
-echo json_encode([
-    'success' => true,
-    'data' => [
-        'prompt' => "Generate personalized local SEO advice for a {$businessCategory} business in {$city} (population: {$citySize}). " .
-                   "The business has " . ($gbpStatus === 'yes' ? 'claimed' : 'not claimed') . " their Google Business Profile " .
-                   "and has {$reviewCount} reviews. " .
-                   "Provide specific, actionable advice that considers the local market size and competition.",
-        'businessInfo' => [
-            'city' => $city,
-            'businessCategory' => $businessCategory,
-            'gbpStatus' => $gbpStatus,
-            'reviewCount' => $reviewCount,
-            'citySize' => $citySize
-        ],
-        'timestamp' => date('c'),
-        'requestId' => uniqid('req_', true)
-    ]
+// Prepare data for Make.com webhook
+$webhookData = [
+    'businessInfo' => [
+        'city' => $city,
+        'businessCategory' => $businessCategory,
+        'gbpStatus' => $gbpStatus,
+        'reviewCount' => $reviewCount,
+        'citySize' => $citySize
+    ],
+    'prompt' => "Generate personalized local SEO advice for a {$businessCategory} business in {$city} (population: {$citySize}). " .
+               "The business has " . ($gbpStatus === 'yes' ? 'claimed' : 'not claimed') . " their Google Business Profile " .
+               "and has {$reviewCount} reviews. " .
+               "Provide specific, actionable advice that considers the local market size and competition.",
+    'timestamp' => date('c'),
+    'requestId' => uniqid('req_', true)
+];
+
+// Send data to Make.com webhook
+$ch = curl_init('https://hook.us1.make.com/3lwen6w2qhm4d302ww6dln4308qh26uf');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($webhookData));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json'
 ]);
+
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+if ($httpCode === 200) {
+    echo json_encode([
+        'success' => true,
+        'data' => $webhookData
+    ]);
+} else {
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'Failed to send data to webhook',
+        'details' => [
+            'webhookStatusCode' => $httpCode,
+            'timestamp' => date('c'),
+            'requestId' => $webhookData['requestId']
+        ]
+    ]);
+}
 
 // Helper function to get city size (placeholder)
 function getCitySize($city) {
