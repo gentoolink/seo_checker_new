@@ -66,22 +66,55 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($webhookData));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json'
 ]);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Set timeout to 30 seconds
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true); // Verify SSL certificate
 
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curlError = curl_error($ch);
 curl_close($ch);
 
+// Log the response for debugging
+error_log("Make.com Webhook Response - HTTP Code: " . $httpCode);
+error_log("Make.com Webhook Response - Body: " . $response);
+if ($curlError) {
+    error_log("Make.com Webhook Error: " . $curlError);
+}
+
 if ($httpCode === 200) {
-    echo json_encode([
-        'success' => true,
-        'data' => $webhookData
-    ]);
+    // Try to decode the response
+    $responseData = json_decode($response, true);
+    
+    if (json_last_error() === JSON_ERROR_NONE && isset($responseData['reply'])) {
+        echo json_encode([
+            'success' => true,
+            'data' => [
+                'advice' => $responseData['reply'],
+                'businessInfo' => $webhookData['businessInfo'],
+                'timestamp' => date('c'),
+                'requestId' => $webhookData['requestId']
+            ]
+        ]);
+    } else {
+        // If response is not valid JSON or missing reply field
+        error_log("Invalid response format from Make.com: " . $response);
+        http_response_code(500);
+        echo json_encode([
+            'error' => 'Invalid response from webhook',
+            'details' => [
+                'webhookStatusCode' => $httpCode,
+                'timestamp' => date('c'),
+                'requestId' => $webhookData['requestId']
+            ]
+        ]);
+    }
 } else {
     http_response_code(500);
     echo json_encode([
         'error' => 'Failed to send data to webhook',
         'details' => [
             'webhookStatusCode' => $httpCode,
+            'curlError' => $curlError,
             'timestamp' => date('c'),
             'requestId' => $webhookData['requestId']
         ]
