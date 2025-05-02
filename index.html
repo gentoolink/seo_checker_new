@@ -17,6 +17,7 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5903830644470838"
      crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -103,12 +104,11 @@
             margin-bottom: 5px;
             color: #333;
         }
-        input[type="text"], select, input[type="number"] {
+        input, select {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 4px;
             box-sizing: border-box;
         }
         .radio-group {
@@ -124,17 +124,17 @@
         .radio-option input[type="radio"] {
             margin: 0;
         }
-        button {
+        .submit-button {
             background-color: #2E8B57;
             color: white;
             padding: 12px 24px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
             width: 100%;
+            font-size: 16px;
         }
-        button:hover {
+        .submit-button:hover {
             background-color: #246B47;
         }
         .footer {
@@ -185,6 +185,31 @@
                 padding: 20px;
             }
         }
+        .seo-tips {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        .seo-tips h2 {
+            color: #2E8B57;
+            margin-top: 0;
+        }
+        .seo-tips ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .seo-tips li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .seo-tips li:before {
+            content: "✓";
+            color: #2E8B57;
+            position: absolute;
+            left: 0;
+        }
     </style>
     <script>
         // Function to handle Google Business Profile section visibility
@@ -199,6 +224,35 @@
             }
         }
 
+        // Mobile menu functionality
+        function toggleMenu() {
+            const nav = document.getElementById('mainNav');
+            const body = document.body;
+            nav.classList.toggle('active');
+            body.classList.toggle('menu-open');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.getElementById('mainNav');
+            const menuButton = document.querySelector('.menu-button');
+            
+            if (nav.classList.contains('active') && 
+                !nav.contains(event.target) && 
+                !menuButton.contains(event.target)) {
+                nav.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mainNav').classList.remove('active');
+                document.body.classList.remove('menu-open');
+            });
+        });
+
         // Add event listener when the page loads
         window.onload = function() {
             const gbpSelect = document.getElementById('gbp');
@@ -212,12 +266,8 @@
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="logo">Fast Local SEO Checker</a>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <nav class="nav">
+            <button class="menu-button" onclick="toggleMenu()">☰</button>
+            <nav class="nav" id="mainNav">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
                 <a href="contact.html">Contact</a>
@@ -312,7 +362,7 @@
                 <p class="help-text">Enter 0 if you don't have any reviews yet.</p>
             </div>
             
-            <button type="submit">Check My Business</button>
+            <button type="submit" class="submit-button">Check My Business</button>
         </form>
         
         <div class="footer">
@@ -322,33 +372,10 @@
     </div>
 
     <script>
-        // Mobile menu toggle
-        const hamburger = document.querySelector('.hamburger');
-        const nav = document.querySelector('.nav');
-        
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
+        function toggleMenu() {
+            const nav = document.getElementById('mainNav');
             nav.classList.toggle('active');
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!hamburger.contains(e.target) && !nav.contains(e.target)) {
-                hamburger.classList.remove('active');
-                nav.classList.remove('active');
-            }
-        });
-
-        // Close menu when clicking a link
-        document.querySelectorAll('.nav a').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                nav.classList.remove('active');
-            });
-        });
-
-        // Existing form handling code
-        // ... existing code ...
+        }
     </script>
 </body>
 </html> 

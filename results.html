@@ -17,22 +17,9 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5903830644470838"
      crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+        /* Page-specific styles */
         h1 {
             color: #2E8B57;
             text-align: center;
@@ -59,21 +46,11 @@
             background-color: #f9f9f9;
             border-radius: 10px;
         }
-        .score.f {
-            color: #d63031;
-        }
-        .score.d {
-            color: #e17055;
-        }
-        .score.c {
-            color: #fdcb6e;
-        }
-        .score.b {
-            color: #00b894;
-        }
-        .score.a {
-            color: #2E8B57;
-        }
+        .score.f { color: #d63031; }
+        .score.d { color: #e17055; }
+        .score.c { color: #fdcb6e; }
+        .score.b { color: #00b894; }
+        .score.a { color: #2E8B57; }
         .highlight {
             color: #2E8B57;
             font-weight: bold;
@@ -108,18 +85,11 @@
         .contact-button:hover {
             background-color: #246B47;
         }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #666;
-            font-size: 14px;
-        }
         .business-info {
             text-align: center;
             color: #666;
             margin-bottom: 30px;
         }
-        /* Print button styles */
         .print-button {
             display: block;
             background-color: #2E8B57;
@@ -137,44 +107,42 @@
         .print-button:hover {
             background-color: #246B47;
         }
-        /* Print styles */
-        @media print {
-            body {
-                background-color: white;
-                padding: 0;
-            }
-            .container {
-                box-shadow: none;
-                padding: 0;
-                max-width: 100%;
-            }
-            .print-button, .contact-button {
-                display: none;
-            }
-            .report-section {
-                break-inside: avoid;
-                page-break-inside: avoid;
-                margin: 15px 0;
-                padding: 15px;
-                border: 1px solid #ddd;
-            }
-            .score {
-                border: 2px solid #2E8B57;
-                margin: 20px 0;
-            }
-            a {
-                text-decoration: none;
-                color: #2E8B57;
-            }
-            .footer {
-                margin-top: 30px;
-                padding-top: 20px;
-                border-top: 1px solid #ddd;
-            }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .ai-advice-content {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #2E8B57;
+        }
+        .ai-advice-content p {
+            margin-bottom: 15px;
+        }
+        .error {
+            color: #721c24;
+            background-color: #f8d7da;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </head>
 <body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">Fast Local SEO Checker</a>
+            <button class="menu-button" onclick="toggleMenu()">☰</button>
+            <nav class="nav" id="mainNav">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
     <div class="container">
         <h1>Your Local SEO Health Report</h1>
         
@@ -245,6 +213,13 @@
                 <!-- Dynamic content will be inserted here -->
             </p>
         </div>
+
+        <div class="report-section">
+            <h2>🤖 AI-Powered Local SEO Advice</h2>
+            <div id="ai-advice" class="loading">
+                <p>Generating personalized advice for your business...</p>
+            </div>
+        </div>
         
         <a href="mailto:ken@gentoolinkwebservices.com" class="contact-button">Get Personalized Help</a>
         
@@ -252,15 +227,38 @@
             Powered by <a href="https://gentoolinkwebservices.com/" target="_blank">Gentoolink Web Services</a>.<br>
             © 2025 Fast Local SEO Checker™
         </div>
-
-        <div class="nav">
-            <a href="index.html">Home</a> | 
-            <a href="about.html">About</a> |
-            <a href="contact.html">Contact</a>
-        </div>
     </div>
 
     <script>
+        // Mobile menu functionality
+        function toggleMenu() {
+            const nav = document.getElementById('mainNav');
+            const body = document.body;
+            nav.classList.toggle('active');
+            body.classList.toggle('menu-open');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.getElementById('mainNav');
+            const menuButton = document.querySelector('.menu-button');
+            
+            if (nav.classList.contains('active') && 
+                !nav.contains(event.target) && 
+                !menuButton.contains(event.target)) {
+                nav.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mainNav').classList.remove('active');
+                document.body.classList.remove('menu-open');
+            });
+        });
+
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const businessName = urlParams.get('business-name');
@@ -375,6 +373,51 @@
         } else {
             encouragement.textContent = "You're doing great! Keep up the good work with regular updates and customer engagement.";
         }
+
+        // Fetch personalized advice
+        async function getPersonalizedAdvice() {
+            const adviceDiv = document.getElementById('ai-advice');
+            
+            try {
+                const response = await fetch('get_personalized_advice.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        city: city,
+                        businessCategory: businessCategory,
+                        gbpStatus: gbpStatus,
+                        reviewCount: reviewCount
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    adviceDiv.innerHTML = `
+                        <div class="ai-advice-content">
+                            ${data.advice.split('\n').map(paragraph => 
+                                `<p>${paragraph}</p>`
+                            ).join('')}
+                        </div>
+                    `;
+                } else {
+                    adviceDiv.innerHTML = `
+                        <p class="error">Sorry, we couldn't generate personalized advice at this time. 
+                        Please try again later or contact us for assistance.</p>
+                    `;
+                }
+            } catch (error) {
+                adviceDiv.innerHTML = `
+                    <p class="error">Sorry, we couldn't generate personalized advice at this time. 
+                    Please try again later or contact us for assistance.</p>
+                `;
+            }
+        }
+
+        // Call the function when the page loads
+        getPersonalizedAdvice();
     </script>
 </body>
 </html> 

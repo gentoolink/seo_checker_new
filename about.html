@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Fast Local SEO Checker | Learn About Our Free SEO Tool</title>
-    <meta name="description" content="Learn about Fast Local SEO Checker, a free tool helping small businesses improve their Google visibility. Built by Gentoolink Web Services.">
+    <title>About Fast Local SEO Checker | Free Local SEO Analysis Tool</title>
+    <meta name="description" content="Learn about Fast Local SEO Checker, the free tool that helps small businesses improve their local search visibility. Get instant analysis and actionable steps to boost your Google ranking.">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DTCV7454RF"></script>
     <script>
@@ -17,71 +17,9 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5903830644470838"
      crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            background-color: #f5f5f5;
-        }
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            z-index: 1000;
-            padding: 10px 20px;
-        }
-        .header-content {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            color: #2E8B57;
-            font-size: 1.2em;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        .nav {
-            display: flex;
-            align-items: center;
-        }
-        .nav a {
-            color: #2E8B57;
-            text-decoration: none;
-            margin-left: 20px;
-            transition: color 0.3s ease;
-        }
-        .nav a:hover {
-            color: #246B47;
-        }
-        .hamburger {
-            display: none;
-            cursor: pointer;
-            padding: 10px;
-        }
-        .hamburger span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background-color: #2E8B57;
-            margin: 5px 0;
-            transition: all 0.3s ease;
-        }
-        .container {
-            max-width: 800px;
-            margin: 80px auto 20px;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+        /* Page-specific styles */
         h1 {
             color: #2E8B57;
             text-align: center;
@@ -90,69 +28,22 @@
         h2 {
             color: #2E8B57;
             margin-top: 30px;
-            margin-bottom: 15px;
         }
         p {
             margin-bottom: 20px;
-            color: #333;
+            line-height: 1.6;
         }
         ul {
             margin-bottom: 20px;
-            padding-left: 20px;
         }
         li {
             margin-bottom: 10px;
-            color: #333;
         }
-        a {
-            color: #2E8B57;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #666;
-            font-size: 14px;
-        }
-        @media (max-width: 768px) {
-            .hamburger {
-                display: block;
-            }
-            .nav {
-                position: fixed;
-                top: 60px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 60px);
-                background-color: white;
-                flex-direction: column;
-                align-items: center;
-                padding: 20px 0;
-                transition: left 0.3s ease;
-            }
-            .nav.active {
-                left: 0;
-            }
-            .nav a {
-                margin: 15px 0;
-                font-size: 1.2em;
-            }
-            .hamburger.active span:nth-child(1) {
-                transform: rotate(45deg) translate(5px, 5px);
-            }
-            .hamburger.active span:nth-child(2) {
-                opacity: 0;
-            }
-            .hamburger.active span:nth-child(3) {
-                transform: rotate(-45deg) translate(7px, -6px);
-            }
-            .container {
-                margin-top: 70px;
-                padding: 20px;
-            }
+        .author-bio {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
         }
     </style>
 </head>
@@ -160,12 +51,8 @@
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="logo">Fast Local SEO Checker</a>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <nav class="nav">
+            <button class="menu-button" onclick="toggleMenu()">☰</button>
+            <nav class="nav" id="mainNav">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
                 <a href="contact.html">Contact</a>
@@ -248,28 +135,32 @@
     </div>
 
     <script>
-        // Mobile menu toggle
-        const hamburger = document.querySelector('.hamburger');
-        const nav = document.querySelector('.nav');
-        
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
+        // Mobile menu functionality
+        function toggleMenu() {
+            const nav = document.getElementById('mainNav');
+            const body = document.body;
             nav.classList.toggle('active');
-        });
+            body.classList.toggle('menu-open');
+        }
 
         // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!hamburger.contains(e.target) && !nav.contains(e.target)) {
-                hamburger.classList.remove('active');
+        document.addEventListener('click', function(event) {
+            const nav = document.getElementById('mainNav');
+            const menuButton = document.querySelector('.menu-button');
+            
+            if (nav.classList.contains('active') && 
+                !nav.contains(event.target) && 
+                !menuButton.contains(event.target)) {
                 nav.classList.remove('active');
+                document.body.classList.remove('menu-open');
             }
         });
 
         // Close menu when clicking a link
         document.querySelectorAll('.nav a').forEach(link => {
             link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                nav.classList.remove('active');
+                document.getElementById('mainNav').classList.remove('active');
+                document.body.classList.remove('menu-open');
             });
         });
     </script>
