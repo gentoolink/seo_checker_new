@@ -9,7 +9,7 @@ body {
 
 .container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 80px auto 20px;
     background-color: white;
     padding: 30px;
     border-radius: 10px;
@@ -20,7 +20,10 @@ body {
 .header {
     background-color: #2E8B57;
     padding: 1rem;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 1000;
 }
 
@@ -44,6 +47,7 @@ body {
 .nav {
     display: flex;
     gap: 1rem;
+    align-items: center;
 }
 
 .nav a {
@@ -74,6 +78,7 @@ body {
 @media (max-width: 768px) {
     .menu-button {
         display: block;
+        order: 2;
     }
 
     .nav {
