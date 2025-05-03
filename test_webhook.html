@@ -47,6 +47,14 @@
         .error {
             color: #d63031;
         }
+        #debug {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
@@ -78,8 +86,19 @@
     <button onclick="testWebhook()">Test Webhook</button>
 
     <div id="response"></div>
+    <div id="debug"></div>
 
     <script>
+        function updateDebug(message, data = null) {
+            const debugDiv = document.getElementById('debug');
+            const timestamp = new Date().toISOString();
+            let debugMessage = `${timestamp} - ${message}`;
+            if (data) {
+                debugMessage += '\n' + JSON.stringify(data, null, 2);
+            }
+            debugDiv.textContent = debugMessage + '\n\n' + debugDiv.textContent;
+        }
+
         async function testWebhook() {
             const responseDiv = document.getElementById('response');
             responseDiv.textContent = 'Testing webhook...';
@@ -90,7 +109,6 @@
             const gbpStatus = document.getElementById('gbpStatus').value;
             const reviewCount = document.getElementById('reviewCount').value;
 
-            // Simple format for PHP webhook
             const webhookData = {
                 data: {
                     content: `Generate personalized local SEO advice for a ${businessCategory} business in ${city}. ` +
@@ -99,6 +117,8 @@
                             `Provide specific, actionable advice that considers the local market size and competition.`
                 }
             };
+
+            updateDebug('Sending request with data:', webhookData);
 
             try {
                 const response = await fetch('webhook.php', {
@@ -110,8 +130,12 @@
                     body: JSON.stringify(webhookData)
                 });
 
+                updateDebug('Response status:', response.status);
+                updateDebug('Response headers:', Object.fromEntries(response.headers.entries()));
+
                 // Get the raw response text first
                 const responseText = await response.text();
+                updateDebug('Raw response:', responseText);
                 
                 // Try to parse as JSON, but handle non-JSON responses
                 let result;
@@ -130,16 +154,11 @@
                     responseDiv.classList.add('error');
                 }
 
-                // Log the request data for debugging
-                console.log('Request Data:', webhookData);
-                console.log('Response Status:', response.status);
-                console.log('Response Text:', responseText);
-                console.log('Response Headers:', Object.fromEntries(response.headers.entries()));
-
             } catch (error) {
-                responseDiv.textContent = 'Error:\n' + error.message;
+                const errorMessage = `Error: ${error.message}`;
+                responseDiv.textContent = errorMessage;
                 responseDiv.classList.add('error');
-                console.error('Error:', error);
+                updateDebug('Error occurred:', error);
             }
         }
     </script>

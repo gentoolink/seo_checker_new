@@ -216,8 +216,8 @@
 
         <div class="report-section">
             <h2>🤖 AI-Powered Local SEO Advice</h2>
-            <div id="ai-advice" class="loading">
-                <p>Generating personalized advice for your business...</p>
+            <div id="ai-advice">
+                <p>Coming Soon! I will add this as a feature in the near future.</p>
             </div>
         </div>
         
@@ -373,56 +373,6 @@
         } else {
             encouragement.textContent = "You're doing great! Keep up the good work with regular updates and customer engagement.";
         }
-
-        // Fetch personalized advice
-        async function getPersonalizedAdvice() {
-            const adviceSection = document.getElementById('ai-advice');
-            const adviceContent = adviceSection.querySelector('.loading');
-            const loadingMessage = adviceSection.querySelector('.loading');
-            
-            // Get values from URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const city = urlParams.get('city') || '';
-            const businessCategory = urlParams.get('business-category') || '';
-            const gbpStatus = urlParams.get('gbp') || 'no';
-            const reviewCount = urlParams.get('review-count') || '0';
-
-            // Show loading state
-            loadingMessage.style.display = 'block';
-            adviceContent.style.display = 'none';
-
-            try {
-                const response = await fetch('get_personalized_advice.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        city: city,
-                        businessCategory: businessCategory,
-                        gbpStatus: gbpStatus,
-                        reviewCount: reviewCount
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Update the advice content
-                    adviceContent.innerHTML = data.data.advice;
-                    loadingMessage.style.display = 'none';
-                    adviceContent.style.display = 'block';
-                } else {
-                    throw new Error(data.error || 'Failed to get personalized advice');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                loadingMessage.textContent = 'Sorry, we couldn\'t generate personalized advice at this time. Please try again later or contact us for assistance.';
-            }
-        }
-
-        // Call the function when the page loads
-        getPersonalizedAdvice();
     </script>
 </body>
 </html> 
