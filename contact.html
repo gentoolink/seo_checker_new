@@ -28,6 +28,119 @@
             line-height: 1.6;
             background-color: #f5f5f5;
         }
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            color: #2E8B57;
+            text-decoration: none;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+        }
+        .nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav a {
+            color: #333;
+            text-decoration: none;
+            padding: 5px 10px;
+        }
+        .nav a:hover {
+            color: #2E8B57;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1;
+            border-radius: 5px;
+        }
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+            color: #2E8B57;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #333;
+            margin-left: 20px;
+        }
+        @media (max-width: 768px) {
+            .menu-button {
+                display: block;
+            }
+            .nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            .nav.active {
+                display: flex;
+            }
+            .nav a {
+                width: 100%;
+                text-align: center;
+                padding: 10px;
+            }
+            .dropdown-content {
+                position: static;
+                box-shadow: none;
+                display: none;
+                width: 100%;
+            }
+            .dropdown.active .dropdown-content {
+                display: block;
+            }
+            .dropdown-content a {
+                padding: 10px;
+                text-align: center;
+            }
+        }
         .container {
             max-width: 800px;
             margin: 80px auto 20px;
@@ -111,20 +224,22 @@
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="logo">Fast Local SEO Checker</a>
-            <button class="menu-button" onclick="toggleMenu()">☰</button>
-            <nav class="nav" id="mainNav">
-                <a href="index.html">Home</a>
-                <a href="about.html">About</a>
-                <a href="contact.html">Contact</a>
-                <div class="dropdown">
-                    <a href="local-seo-tips/how-to-ask-for-google-reviews.html">Blog</a>
-                    <div class="dropdown-content">
-                        <a href="local-seo-tips/how-to-ask-for-google-reviews.html">How to Ask for Google Reviews</a>
-                        <a href="local-seo-tips/why-business-not-showing-on-google.html">Why Your Business Isn't Showing on Google</a>
-                        <a href="local-seo-tips/what-google-gemini-means-for-local-seo.html">What Google Gemini Means for Local SEO</a>
+            <div class="nav-container">
+                <nav class="nav" id="mainNav">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                    <div class="dropdown">
+                        <a href="local-seo-tips/how-to-ask-for-google-reviews.html">Blog</a>
+                        <div class="dropdown-content">
+                            <a href="local-seo-tips/how-to-ask-for-google-reviews.html">How to Ask for Google Reviews</a>
+                            <a href="local-seo-tips/why-business-not-showing-on-google.html">Why Your Business Isn't Showing on Google</a>
+                            <a href="local-seo-tips/what-google-gemini-means-for-local-seo.html">What Google Gemini Means for Local SEO</a>
+                        </div>
                     </div>
-                </div>
-            </nav>
+                </nav>
+                <button class="menu-button" onclick="toggleMenu()">☰</button>
+            </div>
         </div>
     </header>
 
@@ -195,6 +310,17 @@
             link.addEventListener('click', () => {
                 document.getElementById('mainNav').classList.remove('active');
                 document.body.classList.remove('menu-open');
+            });
+        });
+
+        // Dropdown menu functionality
+        document.querySelectorAll('.dropdown > a').forEach(dropdownLink => {
+            dropdownLink.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    const dropdown = this.parentElement;
+                    dropdown.classList.toggle('active');
+                }
             });
         });
 
