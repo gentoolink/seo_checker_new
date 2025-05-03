@@ -1,4 +1,8 @@
 <?php
+// Enable error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -8,6 +12,15 @@ header('Access-Control-Allow-Headers: Content-Type');
 $OPENAI_API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your actual API key
 $OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
+// Log function
+function logError($message, $data = null) {
+    $log = date('Y-m-d H:i:s') . " - " . $message;
+    if ($data) {
+        $log .= "\nData: " . print_r($data, true);
+    }
+    error_log($log . "\n", 3, "webhook_errors.log");
+}
+
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -16,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    logError("Invalid request method: " . $_SERVER['REQUEST_METHOD']);
     http_response_code(405);
     echo json_encode(['error' => 'Method not allowed']);
     exit();
@@ -23,17 +37,29 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Get the raw POST data
 $rawData = file_get_contents('php://input');
+logError("Received raw data", $rawData);
+
 $data = json_decode($rawData, true);
+logError("Decoded data", $data);
 
 // Validate the data
-if (!$data || !isset($data['data']['content'])) {
+if (!$data) {
+    logError("JSON decode error: " . json_last_error_msg());
     http_response_code(400);
-    echo json_encode(['error' => 'Invalid data format']);
+    echo json_encode(['error' => 'Invalid JSON data']);
+    exit();
+}
+
+if (!isset($data['data']['content'])) {
+    logError("Missing content in data", $data);
+    http_response_code(400);
+    echo json_encode(['error' => 'Missing content field']);
     exit();
 }
 
 // Extract the content
 $content = $data['data']['content'];
+logError("Extracted content", $content);
 
 // Prepare the OpenAI API request
 $openaiData = [
@@ -70,6 +96,7 @@ $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
 // Check for cURL errors
 if (curl_errno($ch)) {
+    logError("cURL error: " . curl_error($ch));
     http_response_code(500);
     echo json_encode([
         'error' => 'Failed to communicate with OpenAI API',
@@ -84,6 +111,7 @@ curl_close($ch);
 $openaiResponse = json_decode($response, true);
 
 if ($httpCode !== 200 || !isset($openaiResponse['choices'][0]['message']['content'])) {
+    logError("OpenAI response error", $openaiResponse);
     http_response_code(500);
     echo json_encode([
         'error' => 'Failed to get response from OpenAI',
@@ -106,6 +134,6 @@ $finalResponse = [
     ]
 ];
 
-// Send the response
+logError("Sending response", $finalResponse);
 echo json_encode($finalResponse);
 ?> 
