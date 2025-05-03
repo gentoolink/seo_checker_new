@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #2E8B57;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #246B47;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .success {
+            color: #2E8B57;
+        }
+        .error {
+            color: #d63031;
+        }
+    </style>
+</head>
+<body>
+    <h1>Webhook Test Form</h1>
+    
+    <div class="form-group">
+        <label for="city">City:</label>
+        <input type="text" id="city" value="Vancouver">
+    </div>
+
+    <div class="form-group">
+        <label for="businessCategory">Business Category:</label>
+        <input type="text" id="businessCategory" value="restaurant">
+    </div>
+
+    <div class="form-group">
+        <label for="gbpStatus">Google Business Profile Status:</label>
+        <select id="gbpStatus">
+            <option value="yes">Claimed</option>
+            <option value="no">Not Claimed</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="reviewCount">Number of Reviews:</label>
+        <input type="number" id="reviewCount" value="5">
+    </div>
+
+    <button onclick="testWebhook()">Test Webhook</button>
+
+    <div id="response"></div>
+
+    <script>
+        async function testWebhook() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.textContent = 'Testing webhook...';
+            responseDiv.className = '';
+
+            const city = document.getElementById('city').value;
+            const businessCategory = document.getElementById('businessCategory').value;
+            const gbpStatus = document.getElementById('gbpStatus').value;
+            const reviewCount = document.getElementById('reviewCount').value;
+
+            // Simple format for PHP webhook
+            const webhookData = {
+                data: {
+                    content: `Generate personalized local SEO advice for a ${businessCategory} business in ${city}. ` +
+                            `The business has ${gbpStatus === 'yes' ? 'claimed' : 'not claimed'} their Google Business Profile ` +
+                            `and has ${reviewCount} reviews. ` +
+                            `Provide specific, actionable advice that considers the local market size and competition.`
+                }
+            };
+
+            try {
+                const response = await fetch('webhook.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(webhookData)
+                });
+
+                // Get the raw response text first
+                const responseText = await response.text();
+                
+                // Try to parse as JSON, but handle non-JSON responses
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                    responseDiv.textContent = 'Response:\n' + JSON.stringify(result, null, 2);
+                } catch (e) {
+                    // If it's not JSON, just show the raw response
+                    responseDiv.textContent = 'Response:\n' + responseText;
+                }
+
+                // Add success/error styling based on status code
+                if (response.ok) {
+                    responseDiv.classList.add('success');
+                } else {
+                    responseDiv.classList.add('error');
+                }
+
+                // Log the request data for debugging
+                console.log('Request Data:', webhookData);
+                console.log('Response Status:', response.status);
+                console.log('Response Text:', responseText);
+                console.log('Response Headers:', Object.fromEntries(response.headers.entries()));
+
+            } catch (error) {
+                responseDiv.textContent = 'Error:\n' + error.message;
+                responseDiv.classList.add('error');
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html> 
